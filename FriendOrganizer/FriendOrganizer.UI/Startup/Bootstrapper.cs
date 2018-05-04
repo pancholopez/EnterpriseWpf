@@ -6,7 +6,7 @@ namespace FriendOrganizer.UI.Startup
 {
     public class Bootstrapper
     {
-        public IContainer Bootstrapp()
+        public IContainer BuildContainer()
         {
             var builder = new ContainerBuilder();
             builder.RegisterType<MainWindow>().AsSelf();

@@ -12,7 +12,7 @@ namespace FriendOrganizer.UI
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             var bootstrapper = new Bootstrapper();
-            var container = bootstrapper.Bootstrapp();
+            var container = bootstrapper.BuildContainer();
 
             var mainWindow = container.Resolve<MainWindow>();
 
