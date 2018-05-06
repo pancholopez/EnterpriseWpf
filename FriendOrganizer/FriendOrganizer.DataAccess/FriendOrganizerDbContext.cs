@@ -5,6 +5,11 @@ namespace FriendOrganizer.DataAccess
 {
     public class FriendOrganizerDbContext : DbContext
     {
+        public FriendOrganizerDbContext(DbContextOptions<FriendOrganizerDbContext> options)
+        :base(options)
+        {
+        }
+
         public DbSet<Friend> Friends { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
