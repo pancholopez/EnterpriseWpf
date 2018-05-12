@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using FriendOrganizer.DataAccess;
 using FriendOrganizer.Model;
@@ -17,14 +15,14 @@ namespace FriendOrganizer.UI.Data
             _contextCreator = contextCreator;
         }
 
-        public async Task<List<Friend>> GetAllAsync()
+        public async Task<Friend> GetByIdAsync(int friendId)
         {
-            //todo: remove seeder from here
-            var ctx = _contextCreator();
-            DataSeeder.SeedFriends(ctx);
-            using (ctx)
+            using ( var ctx = _contextCreator())
             {
-                return await ctx.Friends.AsNoTracking().ToListAsync();
+                //todo: remove seeder from here
+                DataSeeder.SeedFriends(ctx);
+                return await ctx.Friends.AsNoTracking()
+                    .SingleAsync(friend => friend.Id == friendId);
             }
         }
     }
