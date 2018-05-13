@@ -19,8 +19,6 @@ namespace FriendOrganizer.UI.Data
         {
             using ( var ctx = _contextCreator())
             {
-                //todo: remove seeder from here
-                DataSeeder.SeedFriends(ctx);
                 return await ctx.Friends.AsNoTracking()
                     .SingleAsync(friend => friend.Id == friendId);
             }

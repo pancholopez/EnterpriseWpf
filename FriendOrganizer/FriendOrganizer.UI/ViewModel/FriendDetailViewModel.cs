@@ -3,6 +3,7 @@ using System.Windows.Input;
 using FriendOrganizer.Model;
 using FriendOrganizer.UI.Data;
 using FriendOrganizer.UI.Event;
+using FriendOrganizer.UI.Wrapper;
 using Prism.Commands;
 using Prism.Events;
 
@@ -12,7 +13,18 @@ namespace FriendOrganizer.UI.ViewModel
     {
         private readonly IFriendDataService _dataService;
         private readonly IEventAggregator _eventAggregator;
-        private Friend _friend;
+        private FriendWrapper _friend;
+
+        public ICommand SaveCommand { get; }
+        public FriendWrapper Friend
+        {
+            get => _friend;
+            private set
+            {
+                _friend = value;
+                OnPropertyChanged();
+            }
+        }
 
         public FriendDetailViewModel(IFriendDataService dataService,
             IEventAggregator eventAggregator)
@@ -27,12 +39,13 @@ namespace FriendOrganizer.UI.ViewModel
 
         private bool OnSaveCanExecute()
         {
-            return true;
+            //todo:check if there are pending changes
+            return Friend != null && !Friend.HasErrors;
         }
 
         private async void OnSaveExecute()
         {
-            await _dataService.SaveAsync(Friend);
+            await _dataService.SaveAsync(Friend.Model);
             _eventAggregator.GetEvent<AfterFriendSaveEvent>().Publish(
                 new AfterFriendSaveEventArgs
                 {
@@ -43,21 +56,18 @@ namespace FriendOrganizer.UI.ViewModel
 
         private async void OnOpenFriendDetailView(int friendId) => await LoadAsync(friendId);
 
-        public Friend Friend
-        {
-            get => _friend;
-            private set
-            {
-                _friend = value;
-                OnPropertyChanged();
-            }
-        }
-
         public async Task LoadAsync(int friendId)
         {
-            Friend = await _dataService.GetByIdAsync(friendId);
+            var friend = await _dataService.GetByIdAsync(friendId);
+            Friend = new FriendWrapper(friend);
+            Friend.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName != nameof(Friend.HasErrors)) return;
+                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            };
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
         }
 
-        public ICommand SaveCommand { get; }
+        
     }
 }

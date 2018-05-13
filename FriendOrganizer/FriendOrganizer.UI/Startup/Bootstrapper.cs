@@ -15,12 +15,7 @@ namespace FriendOrganizer.UI.Startup
 
             builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
 
-            //todo: add localdb connections string (LocalDB)\MSSQLLocalDB
-            var options = new DbContextOptionsBuilder<FriendOrganizerDbContext>()
-                .UseInMemoryDatabase(databaseName: "testDB")
-                .Options;
-            builder.Register(x => new FriendOrganizerDbContext(options))
-                .As<FriendOrganizerDbContext>();
+            ConfigureRepository(builder);
 
             builder.RegisterType<MainWindow>().AsSelf();
             builder.RegisterType<MainViewModel>().AsSelf();
@@ -31,6 +26,22 @@ namespace FriendOrganizer.UI.Startup
             builder.RegisterType<FriendDataService>().As<IFriendDataService>();
 
             return builder.Build();
+        }
+
+        private static void ConfigureRepository(ContainerBuilder builder, bool useInMemoryDb = false)
+        {
+            if (!useInMemoryDb)
+            {
+                builder.RegisterType<FriendOrganizerDbContext>().AsSelf();
+            }
+            else
+            {
+                var options = new DbContextOptionsBuilder<FriendOrganizerDbContext>()
+                    .UseInMemoryDatabase(databaseName: "testDB")
+                    .Options;
+                builder.Register(x => new FriendOrganizerDbContext(options))
+                    .As<FriendOrganizerDbContext>();
+            }
         }
     }
 }
