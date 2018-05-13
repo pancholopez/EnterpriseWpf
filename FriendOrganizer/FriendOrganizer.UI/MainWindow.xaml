@@ -13,7 +13,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <view:NavigationView DataContext="{Binding NavigationViewModel}" />
-        <view:FriendDetailView Grid.Column="1" DataContext="Binding FriendDetailViewModel" />
+        <view:FriendDetailView Grid.Column="1" DataContext="{Binding FriendDetailViewModel}" />
     </Grid>
 </Window>
 

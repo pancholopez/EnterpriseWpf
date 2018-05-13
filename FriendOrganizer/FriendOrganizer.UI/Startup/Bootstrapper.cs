@@ -3,6 +3,7 @@ using FriendOrganizer.DataAccess;
 using FriendOrganizer.UI.Data;
 using FriendOrganizer.UI.ViewModel;
 using Microsoft.EntityFrameworkCore;
+using Prism.Events;
 
 namespace FriendOrganizer.UI.Startup
 {
@@ -11,6 +12,8 @@ namespace FriendOrganizer.UI.Startup
         public IContainer BuildContainer()
         {
             var builder = new ContainerBuilder();
+
+            builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
 
             //todo: add localdb connections string (LocalDB)\MSSQLLocalDB
             var options = new DbContextOptionsBuilder<FriendOrganizerDbContext>()
