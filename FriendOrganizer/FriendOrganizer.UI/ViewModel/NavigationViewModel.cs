@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FriendOrganizer.UI.Data;
+using FriendOrganizer.UI.Data.Lookups;
 using FriendOrganizer.UI.Event;
 using Prism.Events;
 
