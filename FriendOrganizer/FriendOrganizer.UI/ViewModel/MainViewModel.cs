@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
-using System.Windows;
 using FriendOrganizer.UI.Event;
+using FriendOrganizer.UI.View.Services;
 using Prism.Events;
 
 namespace FriendOrganizer.UI.ViewModel
@@ -11,6 +10,7 @@ namespace FriendOrganizer.UI.ViewModel
     {
         private readonly Func<IFriendDetailViewModel> _friendDetailViewModelCreator;
         private readonly IEventAggregator _eventAggregator;
+        private readonly IMessageDialogService _messageDialogService;
         private IFriendDetailViewModel _friendDetailViewModel;
 
         public INavigationViewModel NavigationViewModel { get; }
@@ -26,10 +26,12 @@ namespace FriendOrganizer.UI.ViewModel
 
         public MainViewModel(INavigationViewModel navigationViewModel,
         Func<IFriendDetailViewModel> friendDetailViewModelCreator,
-            IEventAggregator eventAggregator)
+            IEventAggregator eventAggregator,
+            IMessageDialogService messageDialogService)
         {
             _friendDetailViewModelCreator = friendDetailViewModelCreator;
             _eventAggregator = eventAggregator;
+            _messageDialogService = messageDialogService;
 
             _eventAggregator.GetEvent<OpenFriendDetailViewEvent>()
                 .Subscribe(OnOpenFriendDetailView);
@@ -41,9 +43,9 @@ namespace FriendOrganizer.UI.ViewModel
         {
             if (FriendDetailViewModel != null && FriendDetailViewModel.HasChanges)
             {
-                var result = MessageBox.Show("You've made changes. Navigate away?", "Question",
-                    MessageBoxButton.OKCancel);
-                if (result == MessageBoxResult.Cancel) return;
+                var result =
+                    _messageDialogService.ShowOkCancelDialog("You've made changes. Navigate away?", "Question");
+                if (result == MessageDialogResult.Cancel) return;
             }
             FriendDetailViewModel = _friendDetailViewModelCreator();
             await FriendDetailViewModel.LoadAsync(friendId);

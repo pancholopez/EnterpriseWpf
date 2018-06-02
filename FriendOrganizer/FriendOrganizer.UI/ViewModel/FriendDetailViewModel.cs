@@ -65,8 +65,6 @@ namespace FriendOrganizer.UI.ViewModel
                 });
         }
 
-
-
         public async Task LoadAsync(int friendId)
         {
             var friend = await _repository.GetByIdAsync(friendId);
