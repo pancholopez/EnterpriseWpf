@@ -1,4 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using FriendOrganizer.Model;
@@ -20,10 +24,15 @@ namespace FriendOrganizer.UI.ViewModel
         private readonly IProgrammingLanguageLookupDataService _programmingLanguageLookupDataService;
         private FriendWrapper _friend;
         private bool _hasChanges;
+        private FriendPhoneNumberWrapper _selectedPhoneNumber;
 
         public ICommand SaveCommand { get; }
         public ICommand DeleteCommand { get; }
         public ObservableCollection<LookupItem> ProgrammingLanguages { get; }
+
+        public ICommand AddPhoneNumberCommand { get; }
+        public ICommand RemovePhoneNumberCommand { get; }
+        public ObservableCollection<FriendPhoneNumberWrapper> PhoneNumbers { get; set; }
 
         public FriendWrapper Friend
         {
@@ -48,6 +57,17 @@ namespace FriendOrganizer.UI.ViewModel
             }
         }
 
+        public FriendPhoneNumberWrapper SelectedPhoneNumber
+        {
+            get => _selectedPhoneNumber;
+            set
+            {
+                _selectedPhoneNumber = value;
+                OnPropertyChanged();
+                ((DelegateCommand)RemovePhoneNumberCommand).RaiseCanExecuteChanged();
+            }
+        }
+
         public FriendDetailViewModel(IFriendRepository repository,
             IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
@@ -60,8 +80,35 @@ namespace FriendOrganizer.UI.ViewModel
 
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
             DeleteCommand = new DelegateCommand(OnDeleteExecute);
+            AddPhoneNumberCommand = new DelegateCommand(OnAddPhoneNumberExecute);
+            RemovePhoneNumberCommand = new DelegateCommand(OnRemovePhoneNumberExecute, OnRemovePhoneNumberCanExecute);
 
             ProgrammingLanguages = new ObservableCollection<LookupItem>();
+            PhoneNumbers = new ObservableCollection<FriendPhoneNumberWrapper>();
+        }
+
+        private bool OnRemovePhoneNumberCanExecute()
+        {
+            return SelectedPhoneNumber != null;
+        }
+
+        private void OnRemovePhoneNumberExecute()
+        {
+            SelectedPhoneNumber.PropertyChanged -= FriendPhoneNumberWrapper_PropertyChanged;
+            _repository.RemovePhoneNumber(SelectedPhoneNumber.Model);
+            PhoneNumbers.Remove(SelectedPhoneNumber);
+            SelectedPhoneNumber = null;
+            HasChanges = _repository.HasChanges();
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+        }
+
+        private void OnAddPhoneNumberExecute()
+        {
+            var newNumber = new FriendPhoneNumberWrapper(new FriendPhoneNumber());
+            newNumber.PropertyChanged += FriendPhoneNumberWrapper_PropertyChanged;
+            PhoneNumbers.Add(newNumber);
+            Friend.Model.PhoneNumbers.Add(newNumber.Model);
+            newNumber.Number = string.Empty; //trigger validation
         }
 
         private async void OnDeleteExecute()
@@ -70,7 +117,7 @@ namespace FriendOrganizer.UI.ViewModel
                 .ShowOkCancelDialog($"Are you sure to delete user: {Friend.FirstName} {Friend.LastName}?",
                     "Question");
 
-            if(result == MessageDialogResult.Cancel) return;
+            if (result == MessageDialogResult.Cancel) return;
             _repository.Remove(Friend.Model);
             await _repository.SaveAsync();
             _eventAggregator.GetEvent<AfterFriendDeletedEvent>().Publish(Friend.Id);
@@ -78,7 +125,10 @@ namespace FriendOrganizer.UI.ViewModel
 
         private bool OnSaveCanExecute()
         {
-            return Friend != null && !Friend.HasErrors && HasChanges;
+            return Friend != null
+                   && !Friend.HasErrors
+                   && PhoneNumbers.All(pn => !pn.HasErrors)
+                   && HasChanges;
         }
 
         private async void OnSaveExecute()
@@ -98,8 +148,40 @@ namespace FriendOrganizer.UI.ViewModel
             var friend = friendId.HasValue
             ? await _repository.GetByIdAsync(friendId.Value)
                 : CreateNewFriend();
+
             InitializeFriend(friend);
+
+            InitializeFriendPhoneNumbers(friend.PhoneNumbers);
+
             await LoadProgrammingLanguagesLookupAsync();
+        }
+
+        private void InitializeFriendPhoneNumbers(ICollection<FriendPhoneNumber> phoneNumbers)
+        {
+            foreach (var wrapper in PhoneNumbers)
+            {
+                wrapper.PropertyChanged -= FriendPhoneNumberWrapper_PropertyChanged;
+            }
+            PhoneNumbers.Clear();
+            foreach (var friendPhoneNumber in phoneNumbers)
+            {
+                var wrapper = new FriendPhoneNumberWrapper(friendPhoneNumber);
+                PhoneNumbers.Add(wrapper);
+                wrapper.PropertyChanged += FriendPhoneNumberWrapper_PropertyChanged;
+            }
+        }
+
+        private void FriendPhoneNumberWrapper_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (!HasChanges)
+            {
+                HasChanges = _repository.HasChanges();
+            }
+
+            if (e.PropertyName == nameof(FriendPhoneNumberWrapper.HasErrors))
+            {
+                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            }
         }
 
         private void InitializeFriend(Friend friend)
@@ -125,7 +207,7 @@ namespace FriendOrganizer.UI.ViewModel
         private async Task LoadProgrammingLanguagesLookupAsync()
         {
             ProgrammingLanguages.Clear();
-            ProgrammingLanguages.Add(new NullLookupItem{DisplayMember = " - "});
+            ProgrammingLanguages.Add(new NullLookupItem { DisplayMember = " - " });
             var lookupItems = await _programmingLanguageLookupDataService
                 .GetProgrammingLanguageLookupAsync();
             foreach (var lookupItem in lookupItems)
