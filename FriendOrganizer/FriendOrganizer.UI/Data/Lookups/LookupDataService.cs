@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FriendOrganizer.UI.Data.Lookups
 {
-    public class LookupDataService : IFriendLookupDataService
+    public class LookupDataService : IFriendLookupDataService, IProgrammingLanguageLookupDataService
     {
         private readonly Func<FriendOrganizerDbContext> _contextCreator;
 
@@ -26,6 +26,19 @@ namespace FriendOrganizer.UI.Data.Lookups
                     {
                         Id = friend.Id,
                         DisplayMember = $"{friend.FirstName} {friend.LastName}"
+                    }).ToListAsync();
+            }
+        }
+
+        public async Task<IEnumerable<LookupItem>> GetProgrammingLanguageLookupAsync()
+        {
+            using (var ctx = _contextCreator())
+            {
+                return await ctx.ProgrammingLanguages.AsNoTracking()
+                    .Select(item => new LookupItem
+                    {
+                        Id = item.Id,
+                        DisplayMember = item.Name
                     }).ToListAsync();
             }
         }

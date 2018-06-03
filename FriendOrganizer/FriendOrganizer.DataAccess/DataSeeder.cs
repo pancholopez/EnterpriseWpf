@@ -22,5 +22,22 @@ namespace FriendOrganizer.DataAccess
                 context.SaveChanges();
             }
         }
+
+        public static void SeedProgrammingLanguages(FriendOrganizerDbContext context)
+        {
+            if (!context.ProgrammingLanguages.Any())
+            {
+                var languages = new List<ProgrammingLanguage>
+                {
+                    new ProgrammingLanguage {Name = "C#"},
+                    new ProgrammingLanguage {Name = "Java"},
+                    new ProgrammingLanguage {Name = "PHP"},
+                    new ProgrammingLanguage {Name = "Node"},
+                    new ProgrammingLanguage {Name = "JavaScript"}
+                };
+                context.AddRange(languages);
+                context.SaveChanges();
+            }
+        }
     }
 }

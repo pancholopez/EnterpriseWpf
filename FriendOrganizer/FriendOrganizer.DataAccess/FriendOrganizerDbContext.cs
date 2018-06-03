@@ -8,15 +8,18 @@ namespace FriendOrganizer.DataAccess
         public FriendOrganizerDbContext()
         {
             //DataSeeder.SeedFriends(this);
+            //DataSeeder.SeedProgrammingLanguages(this);
         }
 
         public FriendOrganizerDbContext(DbContextOptions<FriendOrganizerDbContext> options)
         :base(options)
         {
             DataSeeder.SeedFriends(this);
+            DataSeeder.SeedProgrammingLanguages(this);
         }
 
         public DbSet<Friend> Friends { get; set; }
+        public DbSet<ProgrammingLanguage> ProgrammingLanguages { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
