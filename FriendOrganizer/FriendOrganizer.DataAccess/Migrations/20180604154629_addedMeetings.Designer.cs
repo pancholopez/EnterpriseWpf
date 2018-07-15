@@ -11,9 +11,10 @@ using System;
 namespace FriendOrganizer.DataAccess.Migrations
 {
     [DbContext(typeof(FriendOrganizerDbContext))]
-    partial class FriendOrganizerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180604154629_addedMeetings")]
+    partial class addedMeetings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

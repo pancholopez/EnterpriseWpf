@@ -31,13 +31,13 @@ namespace FriendOrganizer.UI.ViewModel
         protected DetailViewModelBase(IEventAggregator eventAggregator)
         {
             EventAggregator = eventAggregator;
-            SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
+            SaveCommand = new DelegateCommand(() => OnSaveExecute(), OnSaveCanExecute);
             DeleteCommand = new DelegateCommand(OnDeleteExecute);
         }
 
         protected abstract void OnDeleteExecute();
         protected abstract bool OnSaveCanExecute();
-        protected abstract void OnSaveExecute();
+        protected abstract Task OnSaveExecute();
 
         public abstract Task LoadAsync(int? id);
 

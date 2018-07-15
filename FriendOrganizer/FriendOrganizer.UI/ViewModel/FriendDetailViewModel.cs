@@ -112,7 +112,7 @@ namespace FriendOrganizer.UI.ViewModel
                    && HasChanges;
         }
 
-        protected override async void OnSaveExecute()
+        protected override async Task OnSaveExecute()
         {
             await _repository.SaveAsync();
             HasChanges = _repository.HasChanges();

@@ -7,8 +7,8 @@ namespace FriendOrganizer.DataAccess
     {
         public FriendOrganizerDbContext()
         {
-            //DataSeeder.SeedFriends(this);
-            //DataSeeder.SeedProgrammingLanguages(this);
+            DataSeeder.SeedFriends(this);
+            DataSeeder.SeedProgrammingLanguages(this);
         }
 
         public FriendOrganizerDbContext(DbContextOptions<FriendOrganizerDbContext> options)
@@ -21,6 +21,7 @@ namespace FriendOrganizer.DataAccess
         public DbSet<Friend> Friends { get; set; }
         public DbSet<ProgrammingLanguage> ProgrammingLanguages { get; set; }
         public DbSet<FriendPhoneNumber> FriendPhoneNumbers { get; set; }
+        public DbSet<Meeting> Meetings { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -31,6 +32,22 @@ namespace FriendOrganizer.DataAccess
 
             }
             //todo: remove pluralization
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<FriendMeetings>()
+                .HasKey(x => new {x.FriendId, x.MeetingId});
+
+            modelBuilder.Entity<FriendMeetings>()
+                .HasOne(fm => fm.Friend)
+                .WithMany(m => m.FriendMeetings)
+                .HasForeignKey(fm => fm.FriendId);
+
+            modelBuilder.Entity<FriendMeetings>()
+                .HasOne(fm => fm.Meeting)
+                .WithMany(f => f.FriendMeetings)
+                .HasForeignKey(fm => fm.MeetingId);
         }
     }
 }

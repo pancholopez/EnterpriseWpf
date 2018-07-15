@@ -28,9 +28,12 @@ namespace FriendOrganizer.Model
 
         public ICollection<FriendPhoneNumber> PhoneNumbers { get; set; }
 
+        public ICollection<FriendMeetings> FriendMeetings { get; set; }
+
         public Friend()
         {
             PhoneNumbers = new Collection<FriendPhoneNumber>();
+            FriendMeetings = new Collection<FriendMeetings>();
         }
     }
 }
