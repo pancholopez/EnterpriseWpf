@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Autofac.Features.Indexed;
 using FriendOrganizer.UI.Event;
 using FriendOrganizer.UI.View.Services;
 using Prism.Commands;
@@ -10,7 +11,7 @@ namespace FriendOrganizer.UI.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        private readonly Func<IFriendDetailViewModel> _friendDetailViewModelCreator;
+        private readonly IIndex<string, IDetailViewModel> _detailViewModelCreator;
         private readonly IEventAggregator _eventAggregator;
         private readonly IMessageDialogService _messageDialogService;
         private IDetailViewModel _detailViewModel;
@@ -29,11 +30,11 @@ namespace FriendOrganizer.UI.ViewModel
         public ICommand CreateNewDetailCommand { get; }
 
         public MainViewModel(INavigationViewModel navigationViewModel,
-        Func<IFriendDetailViewModel> friendDetailViewModelCreator,
+            IIndex<string,IDetailViewModel> detailViewModelCreator, 
             IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService)
         {
-            _friendDetailViewModelCreator = friendDetailViewModelCreator;
+            _detailViewModelCreator = detailViewModelCreator;
             _eventAggregator = eventAggregator;
             _messageDialogService = messageDialogService;
 
@@ -60,12 +61,7 @@ namespace FriendOrganizer.UI.ViewModel
                 if (result == MessageDialogResult.Cancel) return;
             }
 
-            switch (args.ViewModelName)
-            {
-                case nameof(FriendDetailViewModel):
-                    DetailViewModel = _friendDetailViewModelCreator();
-                    break;
-            }
+            DetailViewModel = _detailViewModelCreator[args.ViewModelName];
             await DetailViewModel.LoadAsync(args.Id);
         }
 

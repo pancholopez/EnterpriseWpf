@@ -7,8 +7,9 @@ namespace FriendOrganizer.DataAccess
     {
         public FriendOrganizerDbContext()
         {
-            DataSeeder.SeedFriends(this);
-            DataSeeder.SeedProgrammingLanguages(this);
+            //DataSeeder.SeedFriends(this);
+            //DataSeeder.SeedProgrammingLanguages(this);
+            //DataSeeder.SeedMeetings(this);
         }
 
         public FriendOrganizerDbContext(DbContextOptions<FriendOrganizerDbContext> options)
