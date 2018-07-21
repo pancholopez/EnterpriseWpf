@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using FriendOrganizer.DataAccess;
 using FriendOrganizer.Model;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,11 @@ namespace FriendOrganizer.UI.Data.Repositories
             return await Context.Meetings
                 .Include(m => m.FriendMeetings)
                 .SingleAsync(m => m.Id == id);
+        }
+
+        public async Task<List<Friend>> GetAllFriendsAsync()
+        {
+            return await Context.Set<Friend>().ToListAsync();
         }
     }
 }
