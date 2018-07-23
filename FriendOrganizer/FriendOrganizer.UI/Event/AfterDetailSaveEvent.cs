@@ -2,12 +2,12 @@
 
 namespace FriendOrganizer.UI.Event
 {
-    public class AfterDetailSaveEvent : PubSubEvent<AfterDetailSaveEventArgs>
+    public class AfterDetailSavedEvent : PubSubEvent<AfterDetailSavedEventArgs>
     {
 
     }
 
-    public class AfterDetailSaveEventArgs
+    public class AfterDetailSavedEventArgs
     {
         public int Id { get; set; }
         public string DisplayMember { get; set; }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using FriendOrganizer.Model;
 using FriendOrganizer.UI.Data.Repositories;
+using FriendOrganizer.UI.Event;
 using FriendOrganizer.UI.View.Services;
 using FriendOrganizer.UI.Wrapper;
 using Prism.Commands;
@@ -16,7 +17,6 @@ namespace FriendOrganizer.UI.ViewModel
     public class MeetingDetailViewModel : DetailViewModelBase, IMeetingDetailViewModel
     {
         private MeetingWrapper _meeting;
-        private readonly IMessageDialogService _messageDialogService;
         private readonly IMeetingRepository _meetingRepository;
         private Friend _selectedAvailableFriend;
         private Friend _selectedAddedFriend;
@@ -24,15 +24,27 @@ namespace FriendOrganizer.UI.ViewModel
 
         public MeetingDetailViewModel(IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
-            IMeetingRepository meetingRepository) : base(eventAggregator)
+            IMeetingRepository meetingRepository) : base(eventAggregator, messageDialogService)
         {
-            _messageDialogService = messageDialogService;
             _meetingRepository = meetingRepository;
+            eventAggregator.GetEvent<AfterDetailSavedEvent>()
+                .Subscribe(AfterDetailSaved);
+            eventAggregator.GetEvent<AfterDetailDeletedEvent>()
+                .Subscribe(AfterDetailDeleted);
 
             AddedFriends = new ObservableCollection<Friend>();
             AvailableFriends = new ObservableCollection<Friend>();
             AddFriendCommand = new DelegateCommand(OnAddFriendExecute, OnAddFriendCanExecute);
             RemoveFriendCommand = new DelegateCommand(OnRemoveFriendExecute, OnRemoveFriendCanExecute);
+        }
+
+        private async void AfterDetailDeleted(AfterDetailDeletedEventArgs args)
+        {
+            if (args.ViewModelName == nameof(FriendDetailViewModel))
+            {
+                _allFriends = await _meetingRepository.GetAllFriendsAsync();
+                SetupPickList();
+            }
         }
 
         public ObservableCollection<Friend> AvailableFriends { get; }
@@ -114,7 +126,7 @@ namespace FriendOrganizer.UI.ViewModel
 
         protected override void OnDeleteExecute()
         {
-            var result = _messageDialogService
+            var result = MessageDialogService
                 .ShowOkCancelDialog($"Do you want to delete the meeting {Meeting.Title}?", "Question");
             if (result == MessageDialogResult.Ok)
             {
@@ -133,19 +145,20 @@ namespace FriendOrganizer.UI.ViewModel
         {
             await _meetingRepository.SaveAsync();
             HasChanges = _meetingRepository.HasChanges();
+            Id = Meeting.Id;
             RaiseDetailSaveEvent(Meeting.Id, Meeting.Title);
         }
 
-        public override async Task LoadAsync(int? id)
+        public override async Task LoadAsync(int meetingId)
         {
-            var meeting = id.HasValue
-                ? await _meetingRepository.GetByIdAsync(id.Value)
+            var meeting = meetingId > 0
+                ? await _meetingRepository.GetByIdAsync(meetingId)
                 : CreateNewMeeting();
 
+            Id = meetingId;
             InitializeMeeting(meeting);
 
             _allFriends = await _meetingRepository.GetAllFriendsAsync();
-
             SetupPickList();
         }
 
@@ -183,6 +196,11 @@ namespace FriendOrganizer.UI.ViewModel
                 {
                     ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
                 }
+
+                if (e.PropertyName == nameof(Meeting.Title))
+                {
+                    SetTitle();
+                }
             };
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             if (Meeting.Id < 0)
@@ -190,7 +208,10 @@ namespace FriendOrganizer.UI.ViewModel
                 //trigger the validation
                 Meeting.Title = string.Empty;
             }
+            SetTitle();
         }
+
+        private void SetTitle() => Title = Meeting.Title;
 
         private Meeting CreateNewMeeting()
         {
@@ -201,6 +222,16 @@ namespace FriendOrganizer.UI.ViewModel
             };
             _meetingRepository.Add(meeting);
             return meeting;
+        }
+
+        private async void AfterDetailSaved(AfterDetailSavedEventArgs args)
+        {
+            if (args.ViewModelName == nameof(FriendDetailViewModel))
+            {
+                await _meetingRepository.ReloadFriendAsync(args.Id);
+                _allFriends = await _meetingRepository.GetAllFriendsAsync();
+                SetupPickList();
+            }
         }
     }
 }

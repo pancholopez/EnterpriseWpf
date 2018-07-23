@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Autofac.Features.Indexed;
@@ -14,23 +16,25 @@ namespace FriendOrganizer.UI.ViewModel
         private readonly IIndex<string, IDetailViewModel> _detailViewModelCreator;
         private readonly IEventAggregator _eventAggregator;
         private readonly IMessageDialogService _messageDialogService;
-        private IDetailViewModel _detailViewModel;
+        private IDetailViewModel _selectedDetailViewModel;
 
         public INavigationViewModel NavigationViewModel { get; }
-        public IDetailViewModel DetailViewModel
+        public IDetailViewModel SelectedDetailViewModel
         {
-            get => _detailViewModel;
-            private set
+            get => _selectedDetailViewModel;
+            set
             {
-                _detailViewModel = value;
+                _selectedDetailViewModel = value;
                 OnPropertyChanged();
             }
         }
 
+        public ObservableCollection<IDetailViewModel> DetailViewModels { get; }
+
         public ICommand CreateNewDetailCommand { get; }
 
         public MainViewModel(INavigationViewModel navigationViewModel,
-            IIndex<string,IDetailViewModel> detailViewModelCreator, 
+            IIndex<string, IDetailViewModel> detailViewModelCreator,
             IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService)
         {
@@ -38,31 +42,64 @@ namespace FriendOrganizer.UI.ViewModel
             _eventAggregator = eventAggregator;
             _messageDialogService = messageDialogService;
 
+            DetailViewModels = new ObservableCollection<IDetailViewModel>();
+
             _eventAggregator.GetEvent<OpenDetailViewEvent>()
                 .Subscribe(OnOpenDetailView);
             _eventAggregator.GetEvent<AfterDetailDeletedEvent>()
                 .Subscribe(AfterDetailDeleted);
+            _eventAggregator.GetEvent<AfterDetailClosedEvent>()
+                .Subscribe(AfterDetailClosed);
 
             CreateNewDetailCommand = new DelegateCommand<Type>(OnCreateNewDetailExecute);
             NavigationViewModel = navigationViewModel;
         }
 
+        private void AfterDetailClosed(AfterDetailClosedEventArgs args)
+        {
+            RemoveDetailViewModel(args.Id, args.ViewModelName);
+        }
+
         private void AfterDetailDeleted(AfterDetailDeletedEventArgs args)
         {
-            DetailViewModel = null;
+            RemoveDetailViewModel(args.Id, args.ViewModelName);
+        }
+
+        private void RemoveDetailViewModel(int id, string viewModelName)
+        {
+            var detailViewModel = DetailViewModels
+                .SingleOrDefault(vm => vm.Id == id
+                                       && vm.GetType().Name == viewModelName);
+
+            if (detailViewModel != null)
+            {
+                DetailViewModels.Remove(detailViewModel);
+            }
         }
 
         private async void OnOpenDetailView(OpenDetailViewEventArgs args)
         {
-            if (DetailViewModel != null && DetailViewModel.HasChanges)
+            //doesn't make sense for TAB UI
+            //if (SelectedDetailViewModel != null && SelectedDetailViewModel.HasChanges)
+            //{
+            //    var result =
+            //        _messageDialogService.ShowOkCancelDialog("You've made changes. Navigate away?", "Question");
+            //    if (result == MessageDialogResult.Cancel) return;
+            //}
+
+            var detailViewModel = DetailViewModels
+                .SingleOrDefault(vm => vm.Id == args.Id
+                                       && vm.GetType().Name == args.ViewModelName);
+
+            if (detailViewModel == null)
             {
-                var result =
-                    _messageDialogService.ShowOkCancelDialog("You've made changes. Navigate away?", "Question");
-                if (result == MessageDialogResult.Cancel) return;
+                detailViewModel = _detailViewModelCreator[args.ViewModelName];
+                await detailViewModel.LoadAsync(args.Id);
+                DetailViewModels.Add(detailViewModel);
             }
 
-            DetailViewModel = _detailViewModelCreator[args.ViewModelName];
-            await DetailViewModel.LoadAsync(args.Id);
+            SelectedDetailViewModel = detailViewModel;
+
         }
 
         public async Task LoadAsync()

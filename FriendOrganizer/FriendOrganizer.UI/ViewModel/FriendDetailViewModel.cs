@@ -17,7 +17,6 @@ namespace FriendOrganizer.UI.ViewModel
     public class FriendDetailViewModel : DetailViewModelBase, IFriendDetailViewModel
     {
         private readonly IFriendRepository _repository;
-        private readonly IMessageDialogService _messageDialogService;
         private readonly IProgrammingLanguageLookupDataService _programmingLanguageLookupDataService;
         private FriendWrapper _friend;
         private FriendPhoneNumberWrapper _selectedPhoneNumber;
@@ -54,10 +53,9 @@ namespace FriendOrganizer.UI.ViewModel
             IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
             IProgrammingLanguageLookupDataService programmingLanguageLookupDataService)
-        : base(eventAggregator)
+        : base(eventAggregator, messageDialogService)
         {
             _repository = repository;
-            _messageDialogService = messageDialogService;
             _programmingLanguageLookupDataService = programmingLanguageLookupDataService;
 
 
@@ -96,12 +94,12 @@ namespace FriendOrganizer.UI.ViewModel
         {
             if (await _repository.HasMeetingsASync(Friend.Id))
             {
-                _messageDialogService
+                MessageDialogService
                     .ShowInfoDialog($"{Friend.FirstName} {Friend.LastName} can't be deleted. This friend is part of at least one meeting.");
                 return;
             }
 
-            var result = _messageDialogService
+            var result = MessageDialogService
                 .ShowOkCancelDialog($"Are you sure to delete user: {Friend.FirstName} {Friend.LastName}?",
                     "Question");
 
@@ -123,14 +121,17 @@ namespace FriendOrganizer.UI.ViewModel
         {
             await _repository.SaveAsync();
             HasChanges = _repository.HasChanges();
+            Id = Friend.Id;
             RaiseDetailSaveEvent(Friend.Id, $"{Friend.FirstName} {Friend.LastName}");
         }
 
-        public override async Task LoadAsync(int? friendId)
+        public override async Task LoadAsync(int friendId)
         {
-            var friend = friendId.HasValue
-            ? await _repository.GetByIdAsync(friendId.Value)
+            var friend = friendId > 0
+            ? await _repository.GetByIdAsync(friendId)
                 : CreateNewFriend();
+
+            Id = friendId;
 
             InitializeFriend(friend);
 
@@ -176,8 +177,16 @@ namespace FriendOrganizer.UI.ViewModel
                 {
                     HasChanges = _repository.HasChanges();
                 }
-                if (e.PropertyName != nameof(Friend.HasErrors)) return;
-                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+
+                if (e.PropertyName == nameof(Friend.HasErrors))
+                {
+                    ((DelegateCommand) SaveCommand).RaiseCanExecuteChanged();
+                }
+                if (e.PropertyName == nameof(Friend.FirstName)
+                    || e.PropertyName == nameof(Friend.LastName))
+                {
+                    SetTile();
+                }
             };
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             if (Friend.Id < 0)
@@ -185,7 +194,10 @@ namespace FriendOrganizer.UI.ViewModel
                 //trigger validation for new friend
                 Friend.FirstName = string.Empty;
             }
+            SetTile();
         }
+
+        private void SetTile() => Title = $"{Friend.FirstName} {Friend.LastName}";
 
         private async Task LoadProgrammingLanguagesLookupAsync()
         {
