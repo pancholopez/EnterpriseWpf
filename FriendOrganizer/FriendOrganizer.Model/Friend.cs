@@ -24,7 +24,11 @@ namespace FriendOrganizer.Model
 
         public int? FavoriteLanguageId { get; set; }
 
+        //todo: check if this can be deleted
         public ProgrammingLanguage FavoriteLanguage { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
 
         public ICollection<FriendPhoneNumber> PhoneNumbers { get; set; }
 

@@ -1,7 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using FriendOrganizer.UI.Event;
 using FriendOrganizer.UI.View.Services;
+using Microsoft.EntityFrameworkCore;
 using Prism.Commands;
 using Prism.Events;
 
@@ -49,14 +52,14 @@ namespace FriendOrganizer.UI.ViewModel
         {
             EventAggregator = eventAggregator;
             MessageDialogService = messageDialogService;
-            SaveCommand = new DelegateCommand(() => OnSaveExecute(), OnSaveCanExecute);
+            SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
             DeleteCommand = new DelegateCommand(OnDeleteExecute);
             CloseDetailViewCommand = new DelegateCommand(OnCloseDetailViewExecute);
         }
 
         protected abstract void OnDeleteExecute();
         protected abstract bool OnSaveCanExecute();
-        protected abstract Task OnSaveExecute();
+        protected abstract void OnSaveExecute();
 
         protected virtual void RaiseCollectionSavedEvent()
         {
@@ -108,6 +111,46 @@ namespace FriendOrganizer.UI.ViewModel
                     DisplayMember = displayMember,
                     ViewModelName = this.GetType().Name
                 });
+        }
+
+        protected async Task SaveWithOptimisticConcurrencyAsync(Func<Task> saveFunc, 
+            Action afterSaveAction)
+        {
+            try
+            {
+                await saveFunc();
+            }
+            catch (DbUpdateConcurrencyException exception)
+            {
+                var databaseValues = exception.Entries.Single().GetDatabaseValues();
+                if (databaseValues == null)
+                {
+                    MessageDialogService.ShowInfoDialog("The entity has been deleted by another user.");
+                    RaiseDetailDeletedEvent(Id);
+                    return;
+                }
+
+                var result = MessageDialogService.ShowOkCancelDialog(
+                    "The entity has changed in the meantime by someone else. " +
+                    "Click OK to save your changes anyway, click Cancel " +
+                    "to reload the entity from the database.", "Question");
+
+                if (result == MessageDialogResult.Ok)
+                {
+                    //update the original values with database-values
+                    var entry = exception.Entries.Single();
+                    entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+                    await saveFunc();
+                }
+                else
+                {
+                    //reload entity from database
+                    await exception.Entries.Single().ReloadAsync();
+                    await LoadAsync(Id);
+                }
+            }
+
+            afterSaveAction();
         }
     }
 }

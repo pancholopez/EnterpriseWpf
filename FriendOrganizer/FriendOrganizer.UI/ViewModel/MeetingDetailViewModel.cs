@@ -141,7 +141,7 @@ namespace FriendOrganizer.UI.ViewModel
             return Meeting != null && !Meeting.HasErrors && HasChanges;
         }
 
-        protected override async Task OnSaveExecute()
+        protected override async void OnSaveExecute()
         {
             await _meetingRepository.SaveAsync();
             HasChanges = _meetingRepository.HasChanges();

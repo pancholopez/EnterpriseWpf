@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -10,6 +11,7 @@ using FriendOrganizer.UI.Data.Repositories;
 using FriendOrganizer.UI.Event;
 using FriendOrganizer.UI.View.Services;
 using FriendOrganizer.UI.Wrapper;
+using Microsoft.EntityFrameworkCore;
 using Prism.Commands;
 using Prism.Events;
 
@@ -128,12 +130,15 @@ namespace FriendOrganizer.UI.ViewModel
                    && HasChanges;
         }
 
-        protected override async Task OnSaveExecute()
+        protected override async void OnSaveExecute()
         {
-            await _repository.SaveAsync();
-            HasChanges = _repository.HasChanges();
-            Id = Friend.Id;
-            RaiseDetailSaveEvent(Friend.Id, $"{Friend.FirstName} {Friend.LastName}");
+            await SaveWithOptimisticConcurrencyAsync(_repository.SaveAsync,
+                () =>
+                {
+                    HasChanges = _repository.HasChanges();
+                    Id = Friend.Id;
+                    RaiseDetailSaveEvent(Friend.Id, $"{Friend.FirstName} {Friend.LastName}");
+                });
         }
 
         public override async Task LoadAsync(int friendId)
