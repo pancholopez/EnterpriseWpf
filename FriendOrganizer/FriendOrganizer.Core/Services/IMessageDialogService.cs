@@ -1,4 +1,4 @@
-﻿namespace FriendOrganizer.UI.View.Services
+﻿namespace FriendOrganizer.Core.Services
 {
     public interface IMessageDialogService
     {

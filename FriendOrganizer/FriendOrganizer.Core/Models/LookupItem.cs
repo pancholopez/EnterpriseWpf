@@ -1,4 +1,4 @@
-﻿namespace FriendOrganizer.Model
+﻿namespace FriendOrganizer.Core.Models
 {
     public class LookupItem
     {

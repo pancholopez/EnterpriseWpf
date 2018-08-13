@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using FriendOrganizer.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace FriendOrganizer.UI.Data.Repositories
+namespace FriendOrganizer.DataAccess.Repositories
 {
     public class GenericRepository<TEntity, TContext> : IGenericRepository<TEntity>
         where TEntity : class

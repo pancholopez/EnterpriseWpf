@@ -1,7 +1,9 @@
 ﻿using Autofac;
+using FriendOrganizer.Core.Repositories;
+using FriendOrganizer.Core.Services;
 using FriendOrganizer.DataAccess;
-using FriendOrganizer.UI.Data.Lookups;
-using FriendOrganizer.UI.Data.Repositories;
+using FriendOrganizer.DataAccess.Lookups;
+using FriendOrganizer.DataAccess.Repositories;
 using FriendOrganizer.UI.View.Services;
 using FriendOrganizer.UI.ViewModel;
 using Microsoft.EntityFrameworkCore;

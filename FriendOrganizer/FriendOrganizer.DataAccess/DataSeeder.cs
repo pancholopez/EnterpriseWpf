@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using FriendOrganizer.Model;
+using FriendOrganizer.Core.Models;
 
 namespace FriendOrganizer.DataAccess
 {

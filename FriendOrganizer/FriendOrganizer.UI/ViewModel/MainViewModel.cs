@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Autofac.Features.Indexed;
+using FriendOrganizer.Core.Services;
 using FriendOrganizer.UI.Event;
-using FriendOrganizer.UI.View.Services;
 using Prism.Commands;
 using Prism.Events;
 

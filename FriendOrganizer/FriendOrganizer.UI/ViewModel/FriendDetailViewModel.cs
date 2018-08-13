@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using FriendOrganizer.Model;
-using FriendOrganizer.UI.Data.Lookups;
-using FriendOrganizer.UI.Data.Repositories;
+using FriendOrganizer.Core.Lookups;
+using FriendOrganizer.Core.Models;
+using FriendOrganizer.Core.Repositories;
+using FriendOrganizer.Core.Services;
 using FriendOrganizer.UI.Event;
-using FriendOrganizer.UI.View.Services;
 using FriendOrganizer.UI.Wrapper;
-using Microsoft.EntityFrameworkCore;
 using Prism.Commands;
 using Prism.Events;
 

@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModel="clr-namespace:FriendOrganizer.UI.ViewModel"
              xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:model="clr-namespace:FriendOrganizer.Model;assembly=FriendOrganizer.Model"
+             xmlns:model="clr-namespace:FriendOrganizer.Core.Models;assembly=FriendOrganizer.Core"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid d:DataContext="{d:DesignInstance viewModel:MeetingDetailViewModel}">

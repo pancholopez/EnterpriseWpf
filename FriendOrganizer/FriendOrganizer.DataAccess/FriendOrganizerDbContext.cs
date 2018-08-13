@@ -1,4 +1,4 @@
-﻿using FriendOrganizer.Model;
+﻿using FriendOrganizer.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FriendOrganizer.DataAccess

@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using FriendOrganizer.Core.Services;
 using FriendOrganizer.UI.Event;
-using FriendOrganizer.UI.View.Services;
 using Microsoft.EntityFrameworkCore;
 using Prism.Commands;
 using Prism.Events;

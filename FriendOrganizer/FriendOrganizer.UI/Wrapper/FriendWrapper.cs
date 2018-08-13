@@ -1,7 +1,6 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using FriendOrganizer.Model;
+using FriendOrganizer.Core.Models;
 
 namespace FriendOrganizer.UI.Wrapper
 {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FriendOrganizer.Model
+namespace FriendOrganizer.Core.Models
 {
     public class FriendPhoneNumber
     {

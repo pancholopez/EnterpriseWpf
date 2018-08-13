@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace FriendOrganizer.UI.Data.Repositories
+namespace FriendOrganizer.Core.Repositories
 {
     public interface IGenericRepository<T>
     {

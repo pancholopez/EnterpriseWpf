@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
-using FriendOrganizer.DataAccess;
-using FriendOrganizer.Model;
+using FriendOrganizer.Core.Models;
+using FriendOrganizer.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace FriendOrganizer.UI.Data.Repositories
+namespace FriendOrganizer.DataAccess.Repositories
 {
-    class ProgrammingLanguageRepository
+    public class ProgrammingLanguageRepository
         : GenericRepository<ProgrammingLanguage, FriendOrganizerDbContext>,
             IProgrammingLanguageRepository
     {

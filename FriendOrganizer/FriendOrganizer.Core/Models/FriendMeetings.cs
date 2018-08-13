@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-
-namespace FriendOrganizer.Model
+﻿namespace FriendOrganizer.Core.Models
 {
     public class FriendMeetings
     {

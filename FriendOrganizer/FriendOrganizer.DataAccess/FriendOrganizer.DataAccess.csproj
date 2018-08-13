@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FriendOrganizer.Model\FriendOrganizer.Model.csproj" />
+    <ProjectReference Include="..\FriendOrganizer.Core\FriendOrganizer.Core.csproj" />
   </ItemGroup>
 
 </Project>

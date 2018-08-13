@@ -1,14 +1,9 @@
 ﻿using System.Windows;
+using FriendOrganizer.Core.Services;
 
 namespace FriendOrganizer.UI.View.Services
 {
-    public enum MessageDialogResult
-    {
-        Ok,
-        Cancel
-    }
-
-    public class MessageDialogService : IMessageDialogService
+    public sealed class MessageDialogService : IMessageDialogService
     {
         public MessageDialogResult ShowOkCancelDialog(string text, string title)
         {

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FriendOrganizer.DataAccess;
-using FriendOrganizer.Model;
+using FriendOrganizer.Core.Lookups;
+using FriendOrganizer.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace FriendOrganizer.UI.Data.Lookups
+namespace FriendOrganizer.DataAccess.Lookups
 {
     public class LookupDataService : 
         IFriendLookupDataService, 
@@ -24,8 +24,7 @@ namespace FriendOrganizer.UI.Data.Lookups
         {
             using (var ctx = _contextCreator())
             {
-                return await ctx.Friends.AsNoTracking()
-                    .Select(friend => new LookupItem
+                return await ctx.Friends.AsNoTracking().Select(friend => new LookupItem
                     {
                         Id = friend.Id,
                         DisplayMember = $"{friend.FirstName} {friend.LastName}"

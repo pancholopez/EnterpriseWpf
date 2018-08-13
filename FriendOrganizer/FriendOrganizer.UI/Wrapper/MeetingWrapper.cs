@@ -1,5 +1,5 @@
 ﻿using System;
-using FriendOrganizer.Model;
+using FriendOrganizer.Core.Models;
 
 namespace FriendOrganizer.UI.Wrapper
 {
