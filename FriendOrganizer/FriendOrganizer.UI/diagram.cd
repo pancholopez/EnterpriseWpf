@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FriendOrganizer.UI.ViewModel.DetailViewModelBase" Collapsed="true">
+    <Position X="10.25" Y="3.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAkCAAg5AIABEEEAAAAAAAAAAAEAAAAAAAAAAAEEAIA=</HashCode>
+      <FileName>ViewModel\DetailViewModelBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FriendOrganizer.UI.ViewModel.FriendDetailViewModel" Collapsed="true">
+    <Position X="7" Y="5.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ARgAAAAgAADBBAAQAAEgQSAAgAEAAAAJCCAQAAIAAAA=</HashCode>
+      <FileName>ViewModel\FriendDetailViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FriendOrganizer.UI.ViewModel.MainViewModel" Collapsed="true">
+    <Position X="29.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAKiAgFACIAAFAAEAAAAAAAAAAAEEAIAAAAAAAA=</HashCode>
+      <FileName>ViewModel\MainViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FriendOrganizer.UI.ViewModel.MeetingDetailViewModel" Collapsed="true">
+    <Position X="13.5" Y="5.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>DgwQCCQkAgEBAACgEAAAAAgQAAEAAQAIAAIAAQACAAI=</HashCode>
+      <FileName>ViewModel\MeetingDetailViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FriendOrganizer.UI.ViewModel.NavigationItemViewModel" Collapsed="true">
+    <Position X="16.25" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACCAACAAAAAAAAAAAAAACAAAAAAAAAAAAAQAACAAA=</HashCode>
+      <FileName>ViewModel\NavigationItemViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FriendOrganizer.UI.ViewModel.NavigationViewModel" Collapsed="true">
+    <Position X="27.25" Y="4.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQiBAAAAIAAEAAAAAgAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>ViewModel\NavigationViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FriendOrganizer.UI.ViewModel.ProgrammingLanguageDetailViewModel" Collapsed="true">
+    <Position X="9.75" Y="5.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAgABAAgAgABBAACAkAAAgAAAIEAAEAAAAAAAAIAAAA=</HashCode>
+      <FileName>ViewModel\ProgrammingLanguageDetailViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FriendOrganizer.UI.ViewModel.ViewModelBase" Collapsed="true">
+    <Position X="20" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModel\ViewModelBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FriendOrganizer.UI.Wrapper.FriendPhoneNumberWrapper" Collapsed="true">
+    <Position X="21.75" Y="7.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Wrapper\FriendPhoneNumberWrapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FriendOrganizer.UI.Wrapper.FriendWrapper" Collapsed="true">
+    <Position X="19.25" Y="7.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAGAEAAACAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Wrapper\FriendWrapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FriendOrganizer.UI.Wrapper.MeetingWrapper" Collapsed="true">
+    <Position X="25" Y="7.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAEAAAAAAAAAAAAAAABAAAAAAAAAEAAA=</HashCode>
+      <FileName>Wrapper\MeetingWrapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FriendOrganizer.UI.Wrapper.ModelWrapper&lt;T&gt;" Collapsed="true">
+    <Position X="23.75" Y="5.25" Width="1.75" />
+    <InheritanceLine Type="FriendOrganizer.UI.Wrapper.NotifyDataErrorInfoBase" ManuallyRouted="true">
+      <Path>
+        <Point X="24.5" Y="4.441" />
+        <Point X="24.5" Y="4.667" />
+        <Point X="24.625" Y="4.667" />
+        <Point X="24.625" Y="5.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAgAAAAAAAAAAASEABAAAAAgAAAAAAAA=</HashCode>
+      <FileName>Wrapper\ModelWrapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FriendOrganizer.UI.Wrapper.NotifyDataErrorInfoBase" Collapsed="true">
+    <Position X="23.5" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABAAAAAAAAAAAAAAAIABAAAAAxIAA=</HashCode>
+      <FileName>Wrapper\NotifyDataErrorInfoBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FriendOrganizer.UI.Wrapper.ProgrammingLanguageWrapper" Collapsed="true">
+    <Position X="27.5" Y="7.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Wrapper\ProgrammingLanguageWrapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="FriendOrganizer.UI.ViewModel.IDetailViewModel" Collapsed="true">
+    <Position X="2.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAgAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModel\IDetailViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FriendOrganizer.UI.ViewModel.IFriendDetailViewModel" Collapsed="true">
+    <Position X="3.25" Y="5.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModel\IFriendDetailViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FriendOrganizer.UI.ViewModel.IMeetingDetailViewModel" Collapsed="true">
+    <Position X="0.5" Y="5.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModel\IMeetingDetailViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FriendOrganizer.UI.ViewModel.INavigationViewModel" Collapsed="true">
+    <Position X="4.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModel\INavigationViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

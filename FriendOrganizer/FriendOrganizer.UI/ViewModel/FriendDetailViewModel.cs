@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -11,7 +10,6 @@ using FriendOrganizer.UI.Data.Repositories;
 using FriendOrganizer.UI.Event;
 using FriendOrganizer.UI.View.Services;
 using FriendOrganizer.UI.Wrapper;
-using Microsoft.EntityFrameworkCore;
 using Prism.Commands;
 using Prism.Events;
 
