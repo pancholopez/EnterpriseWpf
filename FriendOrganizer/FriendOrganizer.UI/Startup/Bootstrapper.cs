@@ -17,7 +17,7 @@ namespace FriendOrganizer.UI.Startup
 
             builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
 
-            ConfigureRepository(builder);
+            ConfigureRepository(builder, true);
 
             builder.RegisterType<MainWindow>().AsSelf();
 
